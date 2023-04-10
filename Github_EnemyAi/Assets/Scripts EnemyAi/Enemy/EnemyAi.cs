@@ -81,7 +81,7 @@ public class EnemyAi : MonoBehaviour
     }
     private void UpdateAnimations()
     {
-        float animSpeed = Mathf.InverseLerp(MinIdleTimer, MaxIdleTimer, _agent.velocity.magnitude);
+        float animSpeed = Mathf.InverseLerp(MinEnemySpeed, MaxEnemySpeed, _agent.velocity.magnitude);
         _animator.SetFloat(_parametreSpeed, animSpeed, 0.1f, Time.deltaTime * 10);
     }
 
