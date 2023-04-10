@@ -74,6 +74,22 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void AddAttackingEnemy()
+    {
+        if (CurrentAttackingEnemyCount < MaxEnemyAttackAtOnce)
+        {
+            CurrentAttackingEnemyCount++;
+        }
+    }
+    public void RemoveAttackingEnemy()
+    {
+        if (CurrentAttackingEnemyCount > 0)
+        {
+            CurrentAttackingEnemyCount--;
+        }
+    }
+
+
 
     private void OnDrawGizmos()
     {

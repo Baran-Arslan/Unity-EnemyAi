@@ -21,16 +21,15 @@ public class EnemyAttackState : IState
     }
     public void OnEnter()
     {
-        if(EnemyManager.Instance.CurrentAttackingEnemyCount < _maxEnemyAttackAtOnce)//Increase the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount++;
+        EnemyManager.Instance.AddAttackingEnemy();
     }
 
     public void OnExit()
     {
         _agent.SetDestination(_agent.transform.position);
 
-        if (EnemyManager.Instance.MaxEnemyAttackAtOnce > 0)//Reduce the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount--;
+        EnemyManager.Instance.RemoveAttackingEnemy();
+
     }
 
     public void Tick()

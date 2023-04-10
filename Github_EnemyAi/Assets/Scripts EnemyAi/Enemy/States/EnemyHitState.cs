@@ -28,15 +28,14 @@ public class EnemyHitState : IState
         _timer = 0;
         _enemyAi.HitFinished = false;
 
-        if (EnemyManager.Instance.CurrentAttackingEnemyCount < _maxEnemyAttackAtOnce)//Increase the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount++;
+        EnemyManager.Instance.AddAttackingEnemy();
     }
 
     public void OnExit()
     {
 
-        if (EnemyManager.Instance.MaxEnemyAttackAtOnce > 0)//Reduce the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount--;
+        EnemyManager.Instance.RemoveAttackingEnemy();
+
     }
 
     public void Tick()

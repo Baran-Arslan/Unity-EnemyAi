@@ -17,14 +17,13 @@ public class EnemyDelayState : IState
     {
         _deadline = Time.time + _waitTime;
 
-        if (EnemyManager.Instance.CurrentAttackingEnemyCount < _maxEnemyAttackAtOnce)//Increase the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount++;
+        EnemyManager.Instance.AddAttackingEnemy();
     }
     public void OnExit()
     {
 
-        if (EnemyManager.Instance.MaxEnemyAttackAtOnce > 0)//Reduce the number of enemies in the playermanager script
-            EnemyManager.Instance.CurrentAttackingEnemyCount--;
+        EnemyManager.Instance.RemoveAttackingEnemy();
+
     }
     public void Tick()
     {

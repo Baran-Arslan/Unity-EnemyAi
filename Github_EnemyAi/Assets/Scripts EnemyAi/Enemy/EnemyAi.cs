@@ -16,7 +16,9 @@ public class EnemyAi : MonoBehaviour
     public float ChaseRange = 20;
 
     [Header("Speed")]
+    [Tooltip("You need to change animation blend tree values if you change this")]
     public float MaxEnemySpeed;
+    [Tooltip("You need to change animation blend tree values if you change this")]
     public float MinEnemySpeed;
 
     [Header("Idle Wait Times")]
@@ -81,8 +83,7 @@ public class EnemyAi : MonoBehaviour
     }
     private void UpdateAnimations()
     {
-        float animSpeed = Mathf.InverseLerp(MinEnemySpeed, MaxEnemySpeed, _agent.velocity.magnitude);
-        _animator.SetFloat(_parametreSpeed, animSpeed, 0.1f, Time.deltaTime * 10);
+        _animator.SetFloat(_parametreSpeed, _agent.velocity.magnitude, 0.1f, Time.deltaTime * 10);
     }
 
 
