@@ -1,0 +1,17 @@
+{
+    "name": "iCare.Ai",
+    "rootNamespace": "",
+    "references": [
+        "GUID:174bc9f391f1b7f4292b3824c5019a21",
+        "GUID:491bb341409d1aa4bb6050fa62874f9f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
