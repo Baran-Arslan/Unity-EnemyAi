@@ -1,3 +1,16 @@
 {
-	"name": "iCare"
+    "name": "iCare",
+    "rootNamespace": "",
+    "references": [
+        "GUID:174bc9f391f1b7f4292b3824c5019a21"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

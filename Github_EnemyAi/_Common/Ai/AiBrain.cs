@@ -1,5 +1,6 @@
 ﻿using System;
 using _Common.Ai.AiStates;
+using _Common.Ai.Animation;
 using _Common.Ai.Movement;
 using _Common.Ai.Target;
 using _Common.Core.Extensions;
@@ -11,28 +12,29 @@ namespace _Common.Ai {
     [RequireComponent(typeof(IMovementProvider))]
     [RequireComponent(typeof(TargetFinder))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(IKLookAt))]
     public class AiBrain : MonoBehaviour {
 #if UNITY_EDITOR
         [ShowInInspector, ReadOnly, GUIColor(0, 1, 0)]
         private string _currentState => _stateMachine?.CurrentState?.ToString();
 #endif
-        [Required] public AiSO AiData;
+        public AiSO AiData { get; set; }
+        public Transform AttackHand { get; set; }
 
 
-        private ITarget _target => _targetFinder.Get();
+        private Target.ITarget _target => _targetFinder.Get();
 
         private IMovementProvider _movementProvider;
         private TargetFinder _targetFinder;
         private StateMachine _stateMachine;
         private Animator _animator;
+        private IKLookAt _ikLookAt;
 
-        private void Awake() {
+        private void Start() {
             _targetFinder = GetComponent<TargetFinder>();
             _movementProvider = GetComponent<IMovementProvider>();
             _animator = GetComponent<Animator>();
-
-            var leftWeaponHolder = transform.GetChild("LeftWeaponHolder");
-            var rightWeaponHolder = transform.GetChild("RightWeaponHolder");
+            _ikLookAt = GetComponent<IKLookAt>();
 
             SetupStateMachine();
         }
@@ -59,23 +61,34 @@ namespace _Common.Ai {
 
             return;
             bool HasTarget() => _target != null;
-            bool InAttackRange() => _target.Position.IsInRangeOfSqr(transform.position, AiData.AttackRange);
-            bool InWalkingRange() => _target.Position.IsInRangeOfSqr(transform.position, AiData.StartWalkingRange);
+
+            bool InAttackRange() =>
+                _target.GetTransform().position.IsInRangeOfSqr(transform.position, AiData.AttackSettings.AttackRange, true);
+
+            bool InWalkingRange() =>
+                _target.GetTransform().position.IsInRangeOfSqr(transform.position, AiData.StartWalkingRange, true);
 
             void At(IState from, IState to, Func<bool> condition) => _stateMachine.AddTransition(from, to, condition);
             void Any(IState to, Func<bool> condition) => _stateMachine.AddAnyTransition(to, condition);
         }
 
 
-        public void Move(bool run) => _movementProvider.TickMovement(run);
+        public void MoveToTarget(bool canRun) => _movementProvider.TickMovement(_target.GetTransform().position ,canRun);
         public void StopMovement() => _movementProvider.StopMovement();
+        public void RotateTowardsTarget() => transform.LookAtSmooth(_target.GetTransform().position, 2, true);
+        public void EnableIK(bool enable) => _ikLookAt.Target = enable ? _target : null;
 
         public void Attack() {
-            _animator.CrossFadeInFixedTime("Attack", 0.1f);
+            _animator.CrossFadeInFixedTime(AiData.AnimationSo.AttackAnimationName, 0.25f);
         }
 
         public void OnAttackEvent() {
-            AiData.AttackStrategy.PerformAttack(transform, _target, 0, 0);
+            if (_target == null) {
+                _animator.CrossFadeInFixedTime(AnimationSO.IdleAnimationName, 0.2f);
+                return;
+            }
+            AiData.AttackSettings.AttackStrategy.PerformAttack(AttackHand, _target, AiData.AttackSettings.AttackDamage,
+                AiData.AttackSettings.RagdollPushForce);
         }
     }
 }

@@ -1,13 +1,11 @@
 using _Common.Ai.Target;
 using UnityEngine;
 
-namespace _Common {
+namespace _Common.Ai {
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(TargetFinder))]
     public class IKLookAt : MonoBehaviour {
         
-        
-        private ITarget _target => _targetFinder.Get();
+        public ITarget Target { get; set; }
 
 
         private Vector3 _ikTargetPosition;
@@ -15,22 +13,19 @@ namespace _Common {
         
         private Animator _animator;
         private Transform _transform;
-        private TargetFinder _targetFinder;
 
 
         private void Awake() {
             _animator = GetComponent<Animator>();
-            _targetFinder = GetComponent<TargetFinder>();
-
             _transform = transform;
         }
 
         private void Update() {
-            var _hasTarget = _target != null;
-            _weight = Mathf.Lerp(_weight, _hasTarget ? 1 : 0, Time.deltaTime * 2);
-            var targetPos = _hasTarget ? _target.Position : _transform.position + _transform.forward * 10;
+            var _hasTarget = Target != null;
+            _weight = Mathf.Lerp(_weight, _hasTarget ? 1 : 0, Time.deltaTime);
+            var targetPos = _hasTarget ? Target.GetTransform().position : _transform.position + _transform.forward * 10;
 
-            _ikTargetPosition = Vector3.Lerp(_ikTargetPosition, targetPos, 10 * Time.deltaTime);
+            _ikTargetPosition = Vector3.Lerp(_ikTargetPosition, targetPos, Time.deltaTime * 2);
         }
 
 

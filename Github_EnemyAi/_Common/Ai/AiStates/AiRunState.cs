@@ -3,7 +3,7 @@
         public AiRunState(AiBrain brain) : base(brain) { }
         
         public override void Tick() {
-            Brain.Move(true);
+            Brain.MoveToTarget(true);
         }
 
         public override void OnExit() {

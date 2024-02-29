@@ -1,15 +1,10 @@
-﻿using _Common.Ai.Target;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 namespace _Common.Ai.Movement {
-    [RequireComponent(typeof(TargetFinder))]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
     public class NavmeshMovement : MonoBehaviour, IMovementProvider {
-        private ITarget _target => _targetFinder.Get();
-
-        private TargetFinder _targetFinder;
         private Animator _animator;
         private NavMeshAgent _agent;
 
@@ -17,7 +12,6 @@ namespace _Common.Ai.Movement {
 
 
         private void Awake() {
-            _targetFinder = GetComponent<TargetFinder>();
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
 
@@ -25,8 +19,8 @@ namespace _Common.Ai.Movement {
         }
         private void Update() => _animator.SetFloat(_speedParameter, _agent.velocity.magnitude, 0.1f, Time.deltaTime);
 
-        public void TickMovement(bool run) {
-            _agent.SetDestination(_target.Position);
+        public void TickMovement(Vector3 targetPos ,bool run) {
+            _agent.SetDestination(targetPos);
             _agent.speed = run ? 1 : 0.5f;
         }
         public void StopMovement() => _agent.ResetPath();

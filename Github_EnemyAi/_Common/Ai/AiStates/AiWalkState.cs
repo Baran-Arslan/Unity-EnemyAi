@@ -2,12 +2,18 @@
     public class AiWalkState : AiBaseState {
         public AiWalkState(AiBrain brain) : base(brain) { }
 
+        public override void OnEnter() {
+            base.OnEnter();
+            Brain.EnableIK(true);
+        }
+
         public override void Tick() {
-            Brain.Move(false);
+            Brain.MoveToTarget(false);
         }
 
         public override void OnExit() {
             Brain.StopMovement();
+            Brain.EnableIK(false);
         }
     }
 }
